@@ -1,0 +1,527 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Diário de Treino</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one-column gym log — sticky week + day selector, then a stack of exercise cards with big set inputs. */
+:root {
+  --bg: #F3F5F8;
+  --surface: #FFFFFF;
+  --surface-2: #E9EDF3;
+  --ink: #142030;
+  --muted: #5B6676;
+  --line: #D5DBE4;
+  --accent: #D9480F;
+  --a: #2F5597;
+  --b1: #1F7A6D;
+  --b2: #6941C6;
+  --good: #1E7A42; --good-bg: #DCF2E3;
+  --warn: #9B2C1F; --warn-bg: #FBE2DF;
+  --keep: #1F4E99; --keep-bg: #E3ECFA;
+  --read: #2F7D4F; --prog: #B5432F;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F151D; --surface: #18212C; --surface-2: #222D3A; --ink: #E8EDF3; --muted: #9AA6B5; --line: #2C3846;
+    --accent: #FF7A3D; --a: #7FA3E6; --b1: #4FC1AE; --b2: #A88BF0;
+    --good: #7FD9A0; --good-bg: #173524; --warn: #F2A094; --warn-bg: #3A1D19; --keep: #9DBDF5; --keep-bg: #1B2A44;
+    --read: #7FD9A0; --prog: #F2A094;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F151D; --surface: #18212C; --surface-2: #222D3A; --ink: #E8EDF3; --muted: #9AA6B5; --line: #2C3846;
+  --accent: #FF7A3D; --a: #7FA3E6; --b1: #4FC1AE; --b2: #A88BF0;
+  --good: #7FD9A0; --good-bg: #173524; --warn: #F2A094; --warn-bg: #3A1D19; --keep: #9DBDF5; --keep-bg: #1B2A44;
+  --read: #7FD9A0; --prog: #F2A094;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.4; }
+.wrap { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 40px; }
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px 10px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+.brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.brand h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: .02em; text-transform: uppercase; line-height: 1; }
+.brand h1 span { color: var(--accent); }
+.save { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.save i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.save[data-s="ok"] i { background: var(--good); }
+.save[data-s="busy"] i { background: var(--accent); }
+
+.weeks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.weeks button, .days button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 6px 4px; display: grid; gap: 1px; justify-items: center; min-height: 48px; }
+.weeks b { font-family: var(--font-display); font-size: 18px; font-weight: 700; line-height: 1.1; }
+.weeks small, .days small { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.weeks button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.weeks button[aria-pressed="true"] small { color: inherit; opacity: .8; }
+.days { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.days button { border-width: 1px; }
+.days b { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.1; }
+.days button[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 -3px 0 var(--c); }
+.days button[aria-pressed="true"] b { color: var(--c); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.session { padding-block: 16px 8px; display: grid; gap: 6px; }
+.session .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.chip { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1px solid currentColor; }
+.chip.read { color: var(--read); } .chip.prog { color: var(--prog); }
+.session h2 { margin: 0; font-family: var(--font-display); font-size: 30px; line-height: 1.05; font-weight: 700; text-wrap: balance; color: var(--c); }
+.session p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.meter { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.meter .bar { flex: 1; height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.meter .bar > div { height: 100%; background: var(--c); width: 0; transition: width .25s; }
+
+.list { display: grid; gap: 12px; }
+.group { display: grid; gap: 8px; }
+.group.pair { border-left: 3px solid var(--c); padding-left: 10px; }
+.group .ptag { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.card.off { opacity: .6; }
+.head { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: start; }
+.seq { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--c); min-width: 18px; line-height: 1.2; }
+.title { min-width: 0; }
+.title h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.25; }
+.presc { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 3px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.presc b { color: var(--ink); font-weight: 600; }
+.obs { font-size: 12.5px; color: var(--muted); font-style: italic; margin: 0; }
+.adj { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
+.adj.up { color: var(--good); background: var(--good-bg); }
+.adj.down { color: var(--warn); background: var(--warn-bg); }
+.adj.keep { color: var(--keep); background: var(--keep-bg); }
+.last { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.last b { color: var(--ink); font-weight: 600; }
+
+.sets { display: grid; gap: 6px; }
+.setrow { display: grid; grid-template-columns: 54px 1fr 18px 1fr; gap: 8px; align-items: center; }
+.setrow .lbl { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.setrow .x { text-align: center; color: var(--muted); }
+.field { position: relative; min-width: 0; }
+.field input { width: 100%; font: 600 18px/1 var(--font-body); font-variant-numeric: tabular-nums; color: var(--ink); background: var(--surface-2); border: 1px solid transparent; border-radius: 10px; padding: 12px 40px 12px 12px; min-height: 46px; -moz-appearance: textfield; }
+.field input::placeholder { color: var(--muted); opacity: .55; font-weight: 500; }
+.field input:focus { border-color: var(--c); background: var(--surface); outline: none; }
+.field input.filled { background: var(--surface); border-color: var(--line); }
+.field span { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--muted); pointer-events: none; }
+.wait { font-size: 13px; color: var(--muted); padding: 10px 12px; background: var(--surface-2); border-radius: 10px; }
+
+.tips { margin-top: 18px; padding: 14px; border: 1px dashed var(--line); border-radius: 14px; display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.tips h4 { margin: 0 0 2px; font-family: var(--font-display); font-size: 17px; color: var(--ink); text-transform: uppercase; letter-spacing: .03em; }
+.tips p { margin: 0; }
+.lognav { display: grid; gap: 10px; }
+.mode { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border-radius: 10px; padding: 3px; gap: 3px; }
+.mode button { font: 600 14px var(--font-body); border: 0; background: transparent; color: var(--muted); border-radius: 8px; padding: 8px; cursor: pointer; min-height: 38px; }
+.mode button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.evotabs { grid-template-columns: repeat(3, 1fr); margin-bottom: 12px; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .axis { stroke: var(--line); stroke-width: 1; }
+.chart .grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.chart text { fill: var(--muted); font: 600 11px var(--font-body); font-variant-numeric: tabular-nums; }
+.chart text.val { fill: var(--ink); font-size: 11.5px; }
+.chart text.empty { fill: var(--muted); font-weight: 500; font-size: 13px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 16px; height: 0; border-top: 3px solid var(--k); display: inline-block; }
+.legend i.dash { border-top-style: dashed; }
+.tbl { overflow-x: auto; }
+.tbl table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tbl th, .tbl td { padding: 6px 4px; text-align: center; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.tbl th { font-weight: 600; color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+.tbl td:first-child, .tbl th:first-child { text-align: left; }
+.delta.up { color: var(--good); font-weight: 600; } .delta.down { color: var(--warn); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .meter .bar > div { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Diário de <span>Treino</span></h1>
+      <div class="save" id="save" data-s="local"><i></i><span id="saveTxt">Salvo neste aparelho</span></div>
+    </div>
+    <div class="mode" role="tablist" aria-label="Tela">
+      <button type="button" id="modeLog" role="tab" aria-selected="true">Registrar</button>
+      <button type="button" id="modeEvo" role="tab" aria-selected="false">Evolução</button>
+    </div>
+    <div id="logNav" class="lognav">
+      <nav class="weeks" id="weeks" aria-label="Semanas"></nav>
+      <nav class="days" id="days" aria-label="Treinos da semana"></nav>
+    </div>
+  </header>
+
+  <div id="logView">
+    <section class="session" id="session"></section>
+    <div class="list" id="list"></div>
+  </div>
+
+  <div id="evoView" hidden>
+    <section class="session">
+      <div class="eyebrow"><span>Carga máxima por semana</span></div>
+      <h2>Evolução</h2>
+      <p>Maior carga registrada em cada semana. No Treino A vale a maior entre segunda e quinta. A coluna "vs S1" compara a semana mais recente com a semana 1.</p>
+    </section>
+    <nav class="days evotabs" id="evoTabs" aria-label="Treino"></nav>
+    <div class="list" id="evoList"></div>
+  </div>
+
+  <div class="tips" id="tips">
+    <h4>Como usar</h4>
+    <p>Digite a carga (kg) e as repetições de cada série. Os números apagados são os da última vez que você fez o exercício.</p>
+    <p>A etiqueta ao lado do exercício compara suas repetições com a faixa alvo: abaixo do mínimo, diminua a carga; acima do máximo, aumente.</p>
+    <p>Unilaterais: comece pelo lado fraco. O lado forte faz as mesmas repetições, nunca mais. Descanse depois dos dois lados.</p>
+    <p>Joelho: desconforto até 3 de 10 é aceitável se passar até a manhã seguinte. Se não passar, reduza amplitude ou carga.</p>
+  </div>
+</div>
+
+<script>
+const DATA = {"weeks": [{"n": 1, "fase": "Readaptação", "prop": "Volta após 4 meses parado. Cargas moderadas: pare cada série quando sentir que faltam ~3 repetições para a falha. Foque em técnica, amplitude e controle. Nos exercícios unilaterais, comece pelo lado fraco; o lado forte faz as mesmas repetições.", "start": "2026-10-19", "end": "2026-10-25"}, {"n": 2, "fase": "Readaptação", "prop": "Suba um pouco as cargas: pare a 2–3 repetições da falha. O nórdico entra nesta semana com volume baixo (2 × 3).", "start": "2026-10-26", "end": "2026-11-01"}, {"n": 3, "fase": "Progressão", "prop": "Agora as séries chegam mais perto da falha (1–2 repetições sobrando). O lado fraco ganha 1 série extra nos exercícios unilaterais. Exercícios pesados sobem para 4 séries.", "start": "2026-11-02", "end": "2026-11-08"}, {"n": 4, "fase": "Progressão", "prop": "Semana mais forte do bloco: 1–2 repetições da falha, exercícios pesados em 6 a 8 repetições. Ao final da semana, refaça o teste no Kinology para recalibrar as assimetrias.", "start": "2026-11-09", "end": "2026-11-15"}], "sessions": [{"key": "A1", "title": "Superiores (peito em foco)", "label": "Treino A", "ex": "A", "off": 0, "day": "Segunda"}, {"key": "B1", "title": "Quadríceps e joelho (foco no joelho direito)", "label": "Treino B1", "ex": "B1", "off": 1, "day": "Terça"}, {"key": "A2", "title": "Superiores (peito em foco)", "label": "Treino A", "ex": "A", "off": 3, "day": "Quinta"}, {"key": "B2", "title": "Posterior e quadril (foco no posterior esquerdo)", "label": "Treino B2", "ex": "B2", "off": 4, "day": "Sexta"}], "ex": {"A": [{"seq": "1", "name": "Supino inclinado 30° com halteres", "obs": "Aquecimento específico. Banco a 30°: maior ativação da parte superior do peito", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "2", "name": "Supino reto com barra (ou máquina)", "obs": "Ênfase na parte média do peito. Desça a barra até tocar o peito", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "3", "name": "Crucifixo na polia média (ou peck deck)", "obs": "Desça devagar (2–3 s) e segure 1 s no alongamento máximo do peito", "pausa": "90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "4", "name": "Puxada frontal pegada neutra", "obs": "Aquecimento específico. Estenda bem os braços em cima a cada repetição", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "5", "name": "Remada apoiada no peito (máquina ou banco inclinado)", "obs": "Peito apoiado evita roubar com a lombar. Alongue as costas na volta", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "6", "name": "Rosca inclinada com halteres (banco 45°)", "obs": "Braço atrás do tronco (bíceps alongado). Desça até estender bem o cotovelo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "7", "name": "Rosca martelo", "obs": "Pegada neutra: trabalha braquial e braquiorradial, complementa a rosca inclinada", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "8", "name": "Tríceps francês na polia", "obs": "Cotovelos apontando para cima. Desça até alongar bem o tríceps", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "9", "name": "Tríceps na polia", "obs": "Cotovelos junto ao corpo. Estenda totalmente embaixo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}], "B1": [{"seq": "1", "name": "Leg press 45° (ou Agachamento no Jones)", "obs": "Aquecimento específico. Desça até ~90° de joelho, sem ir fundo", "pausa": "2' a 3'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "2", "name": "Agachamento búlgaro · Direita", "obs": "Comece por esta perna. Halteres nas mãos, tronco levemente inclinado", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "2", "name": "Agachamento búlgaro · Esquerda", "obs": "Faça as mesmas repetições da direita, não mais", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira extensora unilateral · Direita", "obs": "Comece por esta perna. Amplitude de 90° até ~30° de flexão do joelho", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira extensora unilateral · Esquerda", "obs": "Mesmas repetições da direita, mesma amplitude", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Mesa flexora unilateral · Esquerda", "obs": "Comece por esta perna. Quadril colado no banco", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Mesa flexora unilateral · Direita", "obs": "Mesmas repetições da esquerda, não mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "5", "name": "Cadeira abdutora", "obs": "Tronco levemente inclinado à frente", "pausa": "90\"", "pair": false, "prog": {"1": [2, "15 a 20", 15, 20], "2": [3, "12 a 15", 12, 15], "3": [3, "12 a 15", 12, 15], "4": [3, "12 a 15", 12, 15]}}, {"seq": "6", "name": "Panturrilha sentado (sóleo)", "obs": "Pausa de 1 s embaixo, alongando. Amplitude completa", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "15 a 20", 15, 20], "2": [3, "12 a 15", 12, 15], "3": [4, "10 a 15", 10, 15], "4": [4, "10 a 15", 10, 15]}}], "B2": [{"seq": "1", "name": "Stiff com barra", "obs": "Aquecimento específico. Desça até sentir o posterior alongar, sem arredondar a lombar", "pausa": "2' a 3'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "2", "name": "Elevação pélvica", "obs": "Segure 1 s em cima, contraindo o glúteo", "pausa": "2'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "3", "name": "Cadeira flexora sentada · Esquerda", "obs": "Comece por esta perna. Tronco inclinado à frente para alongar mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira flexora sentada · Direita", "obs": "Mesmas repetições da esquerda, não mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Nórdico (com elástico ou apoio)", "obs": "Desça em 3–5 s, controlando. Registre 0 na carga (peso corporal)", "pausa": "2'", "pair": false, "prog": {"1": [0, "Começa na sem. 2", 0, 0], "2": [2, "3", 3, 3], "3": [2, "4 a 5", 4, 5], "4": [3, "4 a 6", 4, 6]}}, {"seq": "5", "name": "Subida no banco (step-up) · Direita", "obs": "Comece por esta perna. Banco na altura do joelho ou um pouco abaixo", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "5", "name": "Subida no banco (step-up) · Esquerda", "obs": "Mesmas repetições da direita, não mais", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "6", "name": "Panturrilha em pé", "obs": "Carga alta, pausa de 1 s embaixo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "8 a 12", 8, 12], "4": [4, "8 a 12", 8, 12]}}]}};
+const COLORS = { A1: "var(--a)", A2: "var(--a)", B1: "var(--b1)", B2: "var(--b2)" };
+const LS_LOG = "diarioTreino.v1.log", LS_VIEW = "diarioTreino.v1.view";
+
+function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+let log = lsGet(LS_LOG) || {};
+for (const w of DATA.weeks) if (!log[w.n]) log[w.n] = {};
+
+const parseD = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const ddm = d => String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+function defaultView() {
+  const v = lsGet(LS_VIEW);
+  if (v && v.week && v.sess) return v;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const start = parseD(DATA.weeks[0].start);
+  const diff = Math.round((today - start) / 86400000);
+  if (diff < 0) return { week: 1, sess: "A1" };
+  if (diff >= 28) return { week: 4, sess: "B2" };
+  const week = Math.floor(diff / 7) + 1, wd = diff % 7;
+  const sess = wd === 0 ? "A1" : wd === 1 ? "B1" : wd <= 3 ? "A2" : "B2";
+  return { week, sess };
+}
+let view = defaultView();
+
+const num = v => { if (v === "" || v == null) return null; const n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? null : n; };
+const fmtKg = n => (Math.round(n * 10) / 10).toString().replace(".", ",");
+
+function sessionOf(key) { return DATA.sessions.find(s => s.key === key); }
+function exercisesOf(key) { return DATA.ex[sessionOf(key).ex]; }
+
+// Last time this exercise (by name) was logged before the current week/session
+const ORDER = DATA.sessions.map(s => s.key);
+function lastFor(name, week, sessKey) {
+  const pos = (week - 1) * ORDER.length + ORDER.indexOf(sessKey);
+  for (let p = pos - 1; p >= 0; p--) {
+    const w = Math.floor(p / ORDER.length) + 1, sk = ORDER[p % ORDER.length];
+    const exs = exercisesOf(sk);
+    const idx = exs.findIndex(e => e.name === name);
+    if (idx < 0) continue;
+    const sets = (log[w] || {})[sk + "_" + idx];
+    if (sets && sets.some(s => num(s[0]) != null || num(s[1]) != null)) return { week: w, sess: sk, sets };
+  }
+  return null;
+}
+
+function adjust(sets, mn, mx) {
+  const reps = sets.map(s => num(s[1])).filter(v => v != null);
+  if (!reps.length || !mx) return null;
+  const hi = Math.max(...reps), lo = Math.min(...reps);
+  if (hi > mx && lo >= mn) return { cls: "up", txt: "↑ Aumentar carga" };
+  if (lo < mn && hi <= mx) return { cls: "down", txt: "↓ Diminuir carga" };
+  return { cls: "keep", txt: "✓ Manter carga" };
+}
+
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v;
+    else if (k === "style") e.setAttribute("style", v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) e.append(k);
+  return e;
+};
+
+function renderNav() {
+  const wk = document.getElementById("weeks"); wk.replaceChildren();
+  for (const w of DATA.weeks) {
+    const b = el("button", { type: "button", "aria-pressed": String(w.n === view.week), id: "wk" + w.n },
+      el("b", { text: "Semana " + w.n }), el("small", { text: ddm(parseD(w.start)) + "–" + ddm(parseD(w.end)) }));
+    b.onclick = () => { view.week = w.n; lsSet(LS_VIEW, view); render(); window.scrollTo({ top: 0 }); };
+    wk.append(b);
+  }
+  const ds = document.getElementById("days"); ds.replaceChildren();
+  const ws = parseD(DATA.weeks[view.week - 1].start);
+  for (const s of DATA.sessions) {
+    const b = el("button", { type: "button", "aria-pressed": String(s.key === view.sess), id: "ds" + s.key, style: "--c:" + COLORS[s.key] },
+      el("b", { text: s.label.replace("Treino ", "") }), el("small", { text: s.day.slice(0, 3) + " " + ddm(addDays(ws, s.off)) }));
+    b.onclick = () => { view.sess = s.key; lsSet(LS_VIEW, view); render(); window.scrollTo({ top: 0 }); };
+    ds.append(b);
+  }
+}
+
+function countSets() {
+  const exs = exercisesOf(view.sess), wl = log[view.week];
+  let total = 0, done = 0;
+  exs.forEach((e, i) => {
+    const n = e.prog[view.week][0]; total += n;
+    const sets = wl[view.sess + "_" + i] || [];
+    for (let k = 0; k < n; k++) if (sets[k] && num(sets[k][0]) != null && num(sets[k][1]) != null) done++;
+  });
+  return { total, done };
+}
+function renderMeter() {
+  const { total, done } = countSets();
+  document.getElementById("meterTxt").textContent = done + " de " + total + " séries";
+  document.getElementById("meterBar").style.width = (total ? Math.round(done / total * 100) : 0) + "%";
+}
+
+function renderSession() {
+  const s = sessionOf(view.sess), w = DATA.weeks[view.week - 1];
+  const sec = document.getElementById("session"); sec.replaceChildren();
+  sec.style.setProperty("--c", COLORS[s.key]);
+  sec.append(
+    el("div", { class: "eyebrow" }, el("span", { text: s.label + " · " + s.day }), el("span", { class: "chip " + (w.fase === "Readaptação" ? "read" : "prog"), text: w.fase })),
+    el("h2", { text: s.title }),
+    el("p", { text: w.prop }),
+    el("div", { class: "meter" }, el("div", { class: "bar" }, el("div", { id: "meterBar" })), el("span", { id: "meterTxt" }))
+  );
+  renderMeter();
+}
+
+function card(e, i) {
+  const key = view.sess + "_" + i;
+  const [nSets, label, mn, mx] = e.prog[view.week];
+  const wl = log[view.week];
+  const sets = wl[key] || [];
+  const last = lastFor(e.name, view.week, view.sess);
+  const c = el("article", { class: "card" + (nSets === 0 ? " off" : ""), id: "c_" + key });
+  const adjEl = el("span", { class: "adj", id: "adj_" + key });
+  const updAdj = () => {
+    const a = adjust((wl[key] || []).slice(0, nSets), mn, mx);
+    adjEl.hidden = !a; if (a) { adjEl.className = "adj " + a.cls; adjEl.textContent = a.txt; }
+  };
+  c.append(el("div", { class: "head" },
+    el("div", { class: "seq", text: e.seq }),
+    el("div", { class: "title" }, el("h3", { text: e.name }),
+      el("div", { class: "presc" },
+        el("span", {}, el("b", { text: nSets ? nSets + " × " + label : label })),
+        el("span", { text: "pausa " + e.pausa }))),
+    adjEl));
+  if (e.obs) c.append(el("p", { class: "obs", text: e.obs }));
+  if (nSets === 0) { c.append(el("div", { class: "wait", text: "Este exercício começa na semana 2." })); updAdj(); return c; }
+  if (last) {
+    const best = last.sets.reduce((b, s) => { const k = num(s[0]), r = num(s[1]); return (k != null && (b == null || k > b.k)) ? { k, r } : b; }, null);
+    const sName = sessionOf(last.sess);
+    if (best) c.append(el("div", { class: "last" }, "Última vez (sem. " + last.week + ", " + sName.day.toLowerCase() + "): ", el("b", { text: fmtKg(best.k) + " kg" + (best.r != null ? " × " + best.r : "") })));
+  }
+  const box = el("div", { class: "sets" });
+  for (let k = 0; k < nSets; k++) {
+    const cur = sets[k] || ["", ""];
+    const prev = last && last.sets[k] ? last.sets[k] : null;
+    const mk = (j, unit, mode, ph) => {
+      const inp = el("input", { id: `in_${view.week}_${key}_${k}_${j}`, inputmode: mode, autocomplete: "off", enterkeyhint: "next", "aria-label": `Série ${k + 1} ${j === 0 ? "carga em kg" : "repetições"} — ${e.name}` });
+      inp.value = cur[j] || ""; if (ph) inp.placeholder = ph; if (inp.value) inp.classList.add("filled");
+      inp.addEventListener("input", () => {
+        const v = inp.value.replace(/[^0-9.,]/g, ""); if (v !== inp.value) inp.value = v;
+        if (!wl[key]) wl[key] = [];
+        while (wl[key].length < nSets) wl[key].push(["", ""]);
+        wl[key][k][j] = v; inp.classList.toggle("filled", !!v);
+        lsSet(LS_LOG, log); markDirty(view.week); updAdj(); renderMeter();
+      });
+      return el("div", { class: "field" }, inp, el("span", { text: unit }));
+    };
+    box.append(el("div", { class: "setrow" },
+      el("div", { class: "lbl", text: "Série " + (k + 1) }),
+      mk(0, "kg", "decimal", prev && prev[0] ? prev[0] : ""),
+      el("div", { class: "x", text: "×" }),
+      mk(1, "reps", "numeric", prev && prev[1] ? prev[1] : "")));
+  }
+  c.append(box); updAdj();
+  return c;
+}
+
+function renderList() {
+  const list = document.getElementById("list"); list.replaceChildren();
+  list.style.setProperty("--c", COLORS[view.sess]);
+  const exs = exercisesOf(view.sess);
+  for (let i = 0; i < exs.length; i++) {
+    const e = exs[i];
+    if (e.pair && exs[i + 1] && exs[i + 1].pair && exs[i + 1].seq === e.seq) {
+      const first = e.name.split("·").pop().trim().toLowerCase();
+      const g = el("div", { class: "group pair" }, el("div", { class: "ptag", text: "Unilateral · comece pela " + first }));
+      g.append(card(e, i), card(exs[i + 1], i + 1)); list.append(g); i++;
+    } else list.append(card(e, i));
+  }
+}
+
+// ---------- evolution ----------
+const GROUPS = [
+  { id: "A", label: "Treino A", keys: ["A1", "A2"], color: "var(--a)" },
+  { id: "B1", label: "Treino B1", keys: ["B1"], color: "var(--b1)" },
+  { id: "B2", label: "Treino B2", keys: ["B2"], color: "var(--b2)" },
+];
+function weeklyMax(keys, idx) {
+  return DATA.weeks.map(w => {
+    let best = null;
+    for (const k of keys) {
+      const sets = (log[w.n] || {})[k + "_" + idx] || [];
+      for (const s of sets) { const v = num(s[0]); if (v != null && (best == null || v > best)) best = v; }
+    }
+    return best;
+  });
+}
+const NS = "http://www.w3.org/2000/svg";
+const svg = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+function chart(lines) {
+  const W = 320, H = 150, L = 34, R = 16, T = 22, B = 26;
+  const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, class: "chart", role: "img", "aria-label": "Carga máxima por semana" });
+  const all = lines.flatMap(l => l.vals).filter(v => v != null);
+  const xs = i => L + i * (W - L - R) / 3;
+  for (let i = 0; i < 4; i++) s.append(svg("text", { x: xs(i), y: H - 8, "text-anchor": "middle" }, "Sem " + (i + 1)));
+  s.append(svg("line", { x1: L, x2: W - R, y1: H - B, y2: H - B, class: "axis" }));
+  if (!all.length) { s.append(svg("text", { x: (L + W - R) / 2, y: (T + H - B) / 2 + 4, "text-anchor": "middle", class: "empty" }, "Sem registros ainda")); return s; }
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if (hi - lo < 4) { lo -= 2; hi += 2; }
+  const pad = (hi - lo) * 0.15; lo = Math.max(0, lo - pad); hi += pad;
+  const ys = v => T + (H - B - T) * (1 - (v - lo) / (hi - lo));
+  for (const t of [lo + (hi - lo) * 0.2, lo + (hi - lo) * 0.8]) {
+    s.append(svg("line", { x1: L, x2: W - R, y1: ys(t), y2: ys(t), class: "grid" }));
+    s.append(svg("text", { x: L - 6, y: ys(t) + 4, "text-anchor": "end" }, String(Math.round(t))));
+  }
+  lines.forEach((ln, li) => {
+    let seg = [];
+    const flushSeg = () => {
+      if (seg.length > 1) s.append(svg("polyline", Object.assign({ points: seg.join(" "), fill: "none", stroke: ln.color, "stroke-width": "2.5", "stroke-linejoin": "round", "stroke-linecap": "round" }, ln.dash ? { "stroke-dasharray": "5 4" } : {})));
+      seg = [];
+    };
+    ln.vals.forEach((v, i) => { if (v == null) { flushSeg(); return; } seg.push(xs(i) + "," + ys(v)); });
+    flushSeg();
+    ln.vals.forEach((v, i) => {
+      if (v == null) return;
+      s.append(svg("circle", { cx: xs(i), cy: ys(v), r: "4", fill: ln.dash ? "var(--surface)" : ln.color, stroke: ln.color, "stroke-width": "2" }));
+      const dy = lines.length > 1 && li === 1 ? 17 : -9;
+      s.append(svg("text", { x: xs(i), y: ys(v) + dy, "text-anchor": "middle", class: "val" }, fmtKg(v)));
+    });
+  });
+  return s;
+}
+function deltaCell(vals) {
+  const base = vals[0]; let lastV = null;
+  for (let i = 3; i >= 1; i--) if (vals[i] != null) { lastV = vals[i]; break; }
+  const td = el("td");
+  if (base == null || lastV == null) { td.textContent = "–"; return td; }
+  const p = Math.round((lastV / base - 1) * 100);
+  td.className = "delta " + (p > 0 ? "up" : p < 0 ? "down" : "");
+  td.textContent = (p > 0 ? "+" : "") + p + "%";
+  return td;
+}
+function evoCard(seq, title, lines) {
+  const c = el("article", { class: "card" });
+  c.append(el("div", { class: "head" }, el("div", { class: "seq", text: seq }), el("div", { class: "title" }, el("h3", { text: title })), el("span")));
+  c.append(chart(lines));
+  if (lines.length > 1) c.append(el("div", { class: "legend" }, ...lines.map(l => el("span", { style: "--k:" + l.color }, el("i", { class: l.dash ? "dash" : "" }), l.name))));
+  const tb = el("table");
+  tb.append(el("thead", {}, el("tr", {}, el("th", { text: "kg" }), ...[1, 2, 3, 4].map(n => el("th", { text: "S" + n })), el("th", { text: "vs S1" }))));
+  const body = el("tbody");
+  for (const l of lines) body.append(el("tr", {}, el("td", { text: l.name }), ...l.vals.map(v => el("td", { text: v == null ? "–" : fmtKg(v) })), deltaCell(l.vals)));
+  tb.append(body);
+  c.append(el("div", { class: "tbl" }, tb));
+  return c;
+}
+let evoGroup = "A";
+function renderEvo() {
+  const tabs = document.getElementById("evoTabs"); tabs.replaceChildren();
+  for (const g of GROUPS) {
+    const b = el("button", { type: "button", "aria-pressed": String(g.id === evoGroup), style: "--c:" + g.color }, el("b", { text: g.label }));
+    b.onclick = () => { evoGroup = g.id; renderEvo(); };
+    tabs.append(b);
+  }
+  const g = GROUPS.find(x => x.id === evoGroup);
+  const list = document.getElementById("evoList"); list.replaceChildren();
+  list.style.setProperty("--c", g.color);
+  const exs = DATA.ex[g.id];
+  for (let i = 0; i < exs.length; i++) {
+    const e = exs[i];
+    if (e.pair && exs[i + 1] && exs[i + 1].pair && exs[i + 1].seq === e.seq) {
+      const base = e.name.split("·")[0].trim();
+      list.append(evoCard(e.seq, base, [
+        { name: e.name.split("·").pop().trim(), vals: weeklyMax(g.keys, i), color: g.color },
+        { name: exs[i + 1].name.split("·").pop().trim(), vals: weeklyMax(g.keys, i + 1), color: "var(--muted)", dash: true },
+      ]));
+      i++;
+    } else list.append(evoCard(e.seq, e.name, [{ name: "Carga máx.", vals: weeklyMax(g.keys, i), color: g.color }]));
+  }
+}
+
+let mode = "log";
+function setMode(m) {
+  mode = m;
+  document.getElementById("modeLog").setAttribute("aria-selected", String(m === "log"));
+  document.getElementById("modeEvo").setAttribute("aria-selected", String(m === "evo"));
+  document.getElementById("logNav").hidden = m !== "log";
+  document.getElementById("logView").hidden = m !== "log";
+  document.getElementById("evoView").hidden = m !== "evo";
+  document.getElementById("tips").hidden = m !== "log";
+  if (m === "evo") {
+    const g = GROUPS.find(x => x.keys.includes(view.sess)); if (g) evoGroup = g.id;
+    renderEvo();
+  }
+  window.scrollTo({ top: 0 });
+}
+document.getElementById("modeLog").onclick = () => setMode("log");
+document.getElementById("modeEvo").onclick = () => setMode("evo");
+
+function render() { renderNav(); renderSession(); renderList(); if (mode === "evo") renderEvo(); }
+render();
+
+// ---------- saving to the account (db), with this device as fallback ----------
+let db = null, uid = null;
+const dirty = new Set(), inflight = new Set();
+let timer = null;
+function setSave(state, txt) { const s = document.getElementById("save"); s.dataset.s = state; document.getElementById("saveTxt").textContent = txt; }
+function markDirty(n) { dirty.add(n); if (!db) return; setSave("busy", "Salvando…"); clearTimeout(timer); timer = setTimeout(flush, 700); }
+const docFor = n => db.doc(`data/users/${uid}/semanas/s${n}`);
+async function flush() {
+  if (!db) return;
+  for (const n of [...dirty]) {
+    if (inflight.has(n)) continue;
+    dirty.delete(n); inflight.add(n);
+    try { await docFor(n).set({ sets: log[n], updatedAt: Date.now() }); }
+    catch (e) {
+      if (e && e.code === "unavailable") { dirty.add(n); setTimeout(flush, 1500 + Math.random() * 1000); }
+      else if (e && (e.code === "revoked" || e.code === "invalid_argument" || e.code === "not_granted")) { db = null; setSave("local", "Salvo neste aparelho"); }
+      else dirty.add(n);
+    } finally { inflight.delete(n); }
+  }
+  if (!db) return;
+  if (dirty.size) { clearTimeout(timer); timer = setTimeout(flush, 700); }
+  else if (!inflight.size) setSave("ok", "Salvo na sua conta");
+}
+
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  try {
+    const [d, u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!d || !u) return;
+    const id = await u.id(); if (!id) return;
+    db = d; uid = id;
+    let changed = false;
+    for (const w of DATA.weeks) {
+      const snap = await docFor(w.n).get();
+      const remote = snap.exists ? (snap.data() || {}).sets || {} : {};
+      const local = log[w.n] || {};
+      for (const [k, v] of Object.entries(remote)) { if (JSON.stringify(local[k]) !== JSON.stringify(v)) { local[k] = v; changed = true; } }
+      if (Object.keys(local).some(k => !(k in remote))) dirty.add(w.n);
+      log[w.n] = local;
+    }
+    lsSet(LS_LOG, log);
+    if (changed) { const a = document.activeElement && document.activeElement.id; render(); if (a) { const x = document.getElementById(a); if (x) x.focus(); } }
+    if (dirty.size) { setSave("busy", "Salvando…"); flush(); } else setSave("ok", "Salvo na sua conta");
+  } catch (e) { db = null; setSave("local", "Salvo neste aparelho"); }
+})();
+</script>
+
+</body></html>
