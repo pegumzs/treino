@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Diário de Treino</title>
+<title>Diário de Musculação</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,7 +138,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>Diário de <span>Treino</span></h1>
+      <h1>Diário de <span>musculação</span></h1>
       <div class="save" id="save" data-s="local"><i></i><span id="saveTxt">Salvo neste aparelho</span></div>
     </div>
     <div class="mode" role="tablist" aria-label="Tela">
@@ -160,7 +160,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     <section class="session">
       <div class="eyebrow"><span>Carga máxima por semana</span></div>
       <h2>Evolução</h2>
-      <p>Maior carga registrada em cada semana. No Treino A vale a maior entre segunda e quinta. A coluna "vs S1" compara a semana mais recente com a semana 1.</p>
+      <p>Maior carga registrada em cada semana. A coluna "vs S1" compara a semana mais recente com a semana 1. Na semana 3 (regenerativa) é normal a carga cair.</p>
     </section>
     <nav class="days evotabs" id="evoTabs" aria-label="Treino"></nav>
     <div class="list" id="evoList"></div>
@@ -169,16 +169,16 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <div class="tips" id="tips">
     <h4>Como usar</h4>
     <p>Digite a carga (kg) e as repetições de cada série. Os números apagados são os da última vez que você fez o exercício.</p>
-    <p>A etiqueta ao lado do exercício compara suas repetições com a faixa alvo: abaixo do mínimo, diminua a carga; acima do máximo, aumente.</p>
-    <p>Unilaterais: comece pelo lado fraco. O lado forte faz as mesmas repetições, nunca mais. Descanse depois dos dois lados.</p>
-    <p>Joelho: desconforto até 3 de 10 é aceitável se passar até a manhã seguinte. Se não passar, reduza amplitude ou carga.</p>
+    <p>A etiqueta ao lado do exercício compara suas repetições com a faixa alvo: fez menos que o mínimo, diminua a carga; fez mais que o máximo, aumente.</p>
+    <p>Exercícios com o mesmo número de sequência são feitos em bi-set: sem intervalo entre eles, com o descanso depois de uma série de cada.</p>
+    <p>Respeite a frequência semanal, a faixa de repetições e o intervalo de descanso: cada semana tem um objetivo diferente.</p>
   </div>
 </div>
 
 <script>
-const DATA = {"weeks": [{"n": 1, "fase": "Readaptação", "prop": "Volta após 4 meses parado. Cargas moderadas: pare cada série quando sentir que faltam ~3 repetições para a falha. Foque em técnica, amplitude e controle. Nos exercícios unilaterais, comece pelo lado fraco; o lado forte faz as mesmas repetições.", "start": "2026-10-19", "end": "2026-10-25"}, {"n": 2, "fase": "Readaptação", "prop": "Suba um pouco as cargas: pare a 2–3 repetições da falha. O nórdico entra nesta semana com volume baixo (2 × 3).", "start": "2026-10-26", "end": "2026-11-01"}, {"n": 3, "fase": "Progressão", "prop": "Agora as séries chegam mais perto da falha (1–2 repetições sobrando). O lado fraco ganha 1 série extra nos exercícios unilaterais. Exercícios pesados sobem para 4 séries.", "start": "2026-11-02", "end": "2026-11-08"}, {"n": 4, "fase": "Progressão", "prop": "Semana mais forte do bloco: 1–2 repetições da falha, exercícios pesados em 6 a 8 repetições. Ao final da semana, refaça o teste no Kinology para recalibrar as assimetrias.", "start": "2026-11-09", "end": "2026-11-15"}], "sessions": [{"key": "A1", "title": "Superiores (peito em foco)", "label": "Treino A", "ex": "A", "off": 0, "day": "Segunda"}, {"key": "B1", "title": "Quadríceps e joelho (foco no joelho direito)", "label": "Treino B1", "ex": "B1", "off": 1, "day": "Terça"}, {"key": "A2", "title": "Superiores (peito em foco)", "label": "Treino A", "ex": "A", "off": 3, "day": "Quinta"}, {"key": "B2", "title": "Posterior e quadril (foco no posterior esquerdo)", "label": "Treino B2", "ex": "B2", "off": 4, "day": "Sexta"}], "ex": {"A": [{"seq": "1", "name": "Supino inclinado 30° com halteres", "obs": "Aquecimento específico. Banco a 30°: maior ativação da parte superior do peito", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "2", "name": "Supino reto com barra (ou máquina)", "obs": "Ênfase na parte média do peito. Desça a barra até tocar o peito", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "3", "name": "Crucifixo na polia média (ou peck deck)", "obs": "Desça devagar (2–3 s) e segure 1 s no alongamento máximo do peito", "pausa": "90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "4", "name": "Puxada frontal pegada neutra", "obs": "Aquecimento específico. Estenda bem os braços em cima a cada repetição", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "5", "name": "Remada apoiada no peito (máquina ou banco inclinado)", "obs": "Peito apoiado evita roubar com a lombar. Alongue as costas na volta", "pausa": "90\" a 120\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "6", "name": "Rosca inclinada com halteres (banco 45°)", "obs": "Braço atrás do tronco (bíceps alongado). Desça até estender bem o cotovelo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "7", "name": "Rosca martelo", "obs": "Pegada neutra: trabalha braquial e braquiorradial, complementa a rosca inclinada", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "8", "name": "Tríceps francês na polia", "obs": "Cotovelos apontando para cima. Desça até alongar bem o tríceps", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}, {"seq": "9", "name": "Tríceps na polia", "obs": "Cotovelos junto ao corpo. Estenda totalmente embaixo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 10", 8, 10]}}], "B1": [{"seq": "1", "name": "Leg press 45° (ou Agachamento no Jones)", "obs": "Aquecimento específico. Desça até ~90° de joelho, sem ir fundo", "pausa": "2' a 3'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "2", "name": "Agachamento búlgaro · Direita", "obs": "Comece por esta perna. Halteres nas mãos, tronco levemente inclinado", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "2", "name": "Agachamento búlgaro · Esquerda", "obs": "Faça as mesmas repetições da direita, não mais", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira extensora unilateral · Direita", "obs": "Comece por esta perna. Amplitude de 90° até ~30° de flexão do joelho", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira extensora unilateral · Esquerda", "obs": "Mesmas repetições da direita, mesma amplitude", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Mesa flexora unilateral · Esquerda", "obs": "Comece por esta perna. Quadril colado no banco", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Mesa flexora unilateral · Direita", "obs": "Mesmas repetições da esquerda, não mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "5", "name": "Cadeira abdutora", "obs": "Tronco levemente inclinado à frente", "pausa": "90\"", "pair": false, "prog": {"1": [2, "15 a 20", 15, 20], "2": [3, "12 a 15", 12, 15], "3": [3, "12 a 15", 12, 15], "4": [3, "12 a 15", 12, 15]}}, {"seq": "6", "name": "Panturrilha sentado (sóleo)", "obs": "Pausa de 1 s embaixo, alongando. Amplitude completa", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "15 a 20", 15, 20], "2": [3, "12 a 15", 12, 15], "3": [4, "10 a 15", 10, 15], "4": [4, "10 a 15", 10, 15]}}], "B2": [{"seq": "1", "name": "Stiff com barra", "obs": "Aquecimento específico. Desça até sentir o posterior alongar, sem arredondar a lombar", "pausa": "2' a 3'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "2", "name": "Elevação pélvica", "obs": "Segure 1 s em cima, contraindo o glúteo", "pausa": "2'", "pair": false, "prog": {"1": [3, "10 a 12", 10, 12], "2": [3, "8 a 10", 8, 10], "3": [4, "8 a 10", 8, 10], "4": [4, "6 a 8", 6, 8]}}, {"seq": "3", "name": "Cadeira flexora sentada · Esquerda", "obs": "Comece por esta perna. Tronco inclinado à frente para alongar mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "3", "name": "Cadeira flexora sentada · Direita", "obs": "Mesmas repetições da esquerda, não mais", "pausa": "90\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "4", "name": "Nórdico (com elástico ou apoio)", "obs": "Desça em 3–5 s, controlando. Registre 0 na carga (peso corporal)", "pausa": "2'", "pair": false, "prog": {"1": [0, "Começa na sem. 2", 0, 0], "2": [2, "3", 3, 3], "3": [2, "4 a 5", 4, 5], "4": [3, "4 a 6", 4, 6]}}, {"seq": "5", "name": "Subida no banco (step-up) · Direita", "obs": "Comece por esta perna. Banco na altura do joelho ou um pouco abaixo", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "10 a 12", 10, 12], "4": [4, "8 a 12", 8, 12]}}, {"seq": "5", "name": "Subida no banco (step-up) · Esquerda", "obs": "Mesmas repetições da direita, não mais", "pausa": "90\" a 120\"", "pair": true, "prog": {"1": [2, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [3, "10 a 12", 10, 12], "4": [3, "8 a 12", 8, 12]}}, {"seq": "6", "name": "Panturrilha em pé", "obs": "Carga alta, pausa de 1 s embaixo", "pausa": "60\" a 90\"", "pair": false, "prog": {"1": [3, "12 a 15", 12, 15], "2": [3, "10 a 12", 10, 12], "3": [4, "8 a 12", 8, 12], "4": [4, "8 a 12", 8, 12]}}]}};
-const COLORS = { A1: "var(--a)", A2: "var(--a)", B1: "var(--b1)", B2: "var(--b2)" };
-const LS_LOG = "diarioTreino.v1.log", LS_VIEW = "diarioTreino.v1.view";
+const DATA = {"store": "diarioMusculacao.v1", "evoNote": "", "weeks": [{"n": 1, "fase": "Vigorosa", "tone": "prog", "start": "2026-10-05", "end": "2026-10-11", "prop": "Busque se desafiar respeitando a faixa de repetições e a pausa sugeridas. Repetição máxima (RM) é a quantidade máxima de repetições que você consegue fazer com uma determinada carga."}, {"n": 2, "fase": "Vigorosa", "tone": "prog", "start": "2026-10-12", "end": "2026-10-18", "prop": "Ajuste nas cargas e no número de séries."}, {"n": 3, "fase": "Regenerativa", "tone": "read", "start": "2026-10-19", "end": "2026-10-25", "prop": "Menos séries e cargas mais leves para preparar o corpo para as próximas semanas. Não chegue ao limite: interrompa a série quando sentir que faltam 2 ou 3 repetições para a falha. Aproveite para se adaptar aos exercícios."}, {"n": 4, "fase": "Vigorosa", "tone": "prog", "start": "2026-10-26", "end": "2026-11-01", "prop": "Mesma proposta da semana 2. Atenção ao número de séries."}], "sessions": [{"key": "A", "label": "Treino A", "title": "Costas, peito, braços e panturrilha", "sub": "Superiores", "ex": "A", "color": "var(--a)"}, {"key": "B", "label": "Treino B", "title": "Pernas e glúteos", "sub": "Inferiores", "ex": "B", "color": "var(--b1)"}], "ex": {"A": [{"seq": "1", "name": "Puxada pronada aberta", "obs": "Aquecimento específico", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "2", "name": "Remada máquina", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [2, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "3", "name": "Apoio no solo", "obs": "Aquecimento específico. Se for só com o peso do corpo, registre 0 kg", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "4", "name": "Supino inclinado 15° com halteres", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [2, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "5", "name": "Bíceps barra W", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [2, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": "1'", "pausaW": null, "pair": true, "pairType": "biset"}, {"seq": "5", "name": "Tríceps testa barra W", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [2, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": "1'", "pausaW": null, "pair": true, "pairType": "biset"}, {"seq": "6", "name": "Panturrilha no burrinho", "obs": "", "prog": {"1": [3, "25 RM", 25, 25], "2": [3, "20 RM", 20, 20], "3": [3, "20 (sem falha)", 20, 20], "4": [3, "25 RM", 25, 25]}, "pausa": "1'", "pausaW": null, "pair": false, "pairType": null}, {"seq": "7", "name": "Panturrilha bilateral no Leg press 45°", "obs": "Para suspender o peso no início da série, apoie o pé todo na plataforma", "prog": {"1": [3, "25 RM", 25, 25], "2": [3, "20 RM", 20, 20], "3": [3, "20 (sem falha)", 20, 20], "4": [3, "25 RM", 25, 25]}, "pausa": "1'", "pausaW": null, "pair": false, "pairType": null}], "B": [{"seq": "1", "name": "Levantamento terra sumô", "obs": "Aquecimento específico", "prog": {"1": [4, "12 a 15 RM", 12, 15], "2": [4, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [4, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "2", "name": "Cadeira extensora", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [4, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [4, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "3", "name": "Extensão de quadril 180° na polia", "obs": "", "prog": {"1": [4, "12 a 15 RM", 12, 15], "2": [4, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [4, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "4", "name": "Stiff bilateral livre", "obs": "", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [4, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [4, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}, {"seq": "5", "name": "Cadeira abdutora", "obs": "Segure 2\" no pico da contração em cada repetição (exceto na semana 3)", "prog": {"1": [3, "12 a 15 RM", 12, 15], "2": [3, "10 a 12 RM", 10, 12], "3": [3, "12 a 15 (sem falha)", 12, 15], "4": [3, "10 a 12 RM", 10, 12]}, "pausa": null, "pausaW": {"1": "90\"", "2": "90\" a 120\"", "3": "90\" a 120\"", "4": "90\" a 120\""}, "pair": false, "pairType": null}]}};
+const COLORS = Object.fromEntries(DATA.sessions.map(s => [s.key, s.color]));
+const LS_LOG = DATA.store + ".log", LS_VIEW = DATA.store + ".view";
 
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -194,13 +194,9 @@ function defaultView() {
   const v = lsGet(LS_VIEW);
   if (v && v.week && v.sess) return v;
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const start = parseD(DATA.weeks[0].start);
-  const diff = Math.round((today - start) / 86400000);
-  if (diff < 0) return { week: 1, sess: "A1" };
-  if (diff >= 28) return { week: 4, sess: "B2" };
-  const week = Math.floor(diff / 7) + 1, wd = diff % 7;
-  const sess = wd === 0 ? "A1" : wd === 1 ? "B1" : wd <= 3 ? "A2" : "B2";
-  return { week, sess };
+  let week = 1;
+  for (const w of DATA.weeks) if (today >= parseD(w.start)) week = w.n;
+  return { week, sess: DATA.sessions[0].key };
 }
 let view = defaultView();
 
@@ -253,10 +249,11 @@ function renderNav() {
     wk.append(b);
   }
   const ds = document.getElementById("days"); ds.replaceChildren();
+  ds.style.gridTemplateColumns = "repeat(" + DATA.sessions.length + ", 1fr)";
   const ws = parseD(DATA.weeks[view.week - 1].start);
   for (const s of DATA.sessions) {
     const b = el("button", { type: "button", "aria-pressed": String(s.key === view.sess), id: "ds" + s.key, style: "--c:" + COLORS[s.key] },
-      el("b", { text: s.label.replace("Treino ", "") }), el("small", { text: s.day.slice(0, 3) + " " + ddm(addDays(ws, s.off)) }));
+      el("b", { text: s.label.replace("Treino ", "") }), el("small", { text: s.day ? s.day.slice(0, 3) + " " + ddm(addDays(ws, s.off)) : (s.sub || "") }));
     b.onclick = () => { view.sess = s.key; lsSet(LS_VIEW, view); render(); window.scrollTo({ top: 0 }); };
     ds.append(b);
   }
@@ -283,7 +280,7 @@ function renderSession() {
   const sec = document.getElementById("session"); sec.replaceChildren();
   sec.style.setProperty("--c", COLORS[s.key]);
   sec.append(
-    el("div", { class: "eyebrow" }, el("span", { text: s.label + " · " + s.day }), el("span", { class: "chip " + (w.fase === "Readaptação" ? "read" : "prog"), text: w.fase })),
+    el("div", { class: "eyebrow" }, el("span", { text: s.label + (s.day ? " · " + s.day : "") }), el("span", { class: "chip " + (w.tone || (w.fase === "Readaptação" ? "read" : "prog")), text: w.fase })),
     el("h2", { text: s.title }),
     el("p", { text: w.prop }),
     el("div", { class: "meter" }, el("div", { class: "bar" }, el("div", { id: "meterBar" })), el("span", { id: "meterTxt" }))
@@ -308,7 +305,7 @@ function card(e, i) {
     el("div", { class: "title" }, el("h3", { text: e.name }),
       el("div", { class: "presc" },
         el("span", {}, el("b", { text: nSets ? nSets + " × " + label : label })),
-        el("span", { text: "pausa " + e.pausa }))),
+        el("span", { text: "pausa " + (e.pausa || (e.pausaW && e.pausaW[view.week]) || "") }))),
     adjEl));
   if (e.obs) c.append(el("p", { class: "obs", text: e.obs }));
   if (nSets === 0) { c.append(el("div", { class: "wait", text: "Este exercício começa na semana 2." })); updAdj(); return c; }
@@ -350,19 +347,19 @@ function renderList() {
   for (let i = 0; i < exs.length; i++) {
     const e = exs[i];
     if (e.pair && exs[i + 1] && exs[i + 1].pair && exs[i + 1].seq === e.seq) {
-      const first = e.name.split("·").pop().trim().toLowerCase();
-      const g = el("div", { class: "group pair" }, el("div", { class: "ptag", text: "Unilateral · comece pela " + first }));
+      const tag = e.pairType === "biset" ? "Bi-set · faça os dois em sequência, sem intervalo, e descanse depois"
+        : "Unilateral · comece pela " + e.name.split("·").pop().trim().toLowerCase();
+      const g = el("div", { class: "group pair" }, el("div", { class: "ptag", text: tag }));
       g.append(card(e, i), card(exs[i + 1], i + 1)); list.append(g); i++;
     } else list.append(card(e, i));
   }
 }
 
 // ---------- evolution ----------
-const GROUPS = [
-  { id: "A", label: "Treino A", keys: ["A1", "A2"], color: "var(--a)" },
-  { id: "B1", label: "Treino B1", keys: ["B1"], color: "var(--b1)" },
-  { id: "B2", label: "Treino B2", keys: ["B2"], color: "var(--b2)" },
-];
+const GROUPS = [...new Set(DATA.sessions.map(s => s.ex))].map(id => {
+  const ss = DATA.sessions.filter(s => s.ex === id);
+  return { id, label: ss[0].label, keys: ss.map(s => s.key), color: ss[0].color };
+});
 function weeklyMax(keys, idx) {
   return DATA.weeks.map(w => {
     let best = null;
@@ -439,13 +436,14 @@ function renderEvo() {
     b.onclick = () => { evoGroup = g.id; renderEvo(); };
     tabs.append(b);
   }
+  tabs.style.gridTemplateColumns = "repeat(" + GROUPS.length + ", 1fr)";
   const g = GROUPS.find(x => x.id === evoGroup);
   const list = document.getElementById("evoList"); list.replaceChildren();
   list.style.setProperty("--c", g.color);
   const exs = DATA.ex[g.id];
   for (let i = 0; i < exs.length; i++) {
     const e = exs[i];
-    if (e.pair && exs[i + 1] && exs[i + 1].pair && exs[i + 1].seq === e.seq) {
+    if (e.pair && e.pairType !== "biset" && exs[i + 1] && exs[i + 1].pair && exs[i + 1].seq === e.seq) {
       const base = e.name.split("·")[0].trim();
       list.append(evoCard(e.seq, base, [
         { name: e.name.split("·").pop().trim(), vals: weeklyMax(g.keys, i), color: g.color },
